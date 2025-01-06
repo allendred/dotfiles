@@ -1,0 +1,37 @@
+{
+  "title": "Esc to ABC input",
+  "rules": [
+    {
+      "description": "当 esc 键按下，如果当前不是英文输入法，会先模拟 F18 键以切换为英文输入法，再发送一个 esc 键",
+      "manipulators": [
+        {
+          "conditions": [
+            {
+              "input_sources": [
+                {
+                  "language": "en"
+                }
+              ],
+              "type": "input_source_unless"
+            }
+          ],
+          "from": {
+            "key_code": "escape",
+            "modifiers": {
+              "optional": ["caps_lock"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "f18"
+            },
+            {
+              "key_code": "escape"
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    }
+  ]
+}

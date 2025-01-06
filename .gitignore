@@ -1,0 +1,21 @@
+# mac os
+.DS_Store
+
+.idea
+
+# karabiner
+automatic_backups/
+karabiner.json
+
+# nvim
+lazy-lock.json
+lazyvim.json
+
+# tmux plugins
+tmux/plugins
+
+# zsh plugins
+zsh/plugins
+
+# vim plugins
+vim/pack/vendor/start

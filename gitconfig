@@ -1,0 +1,51 @@
+[init]
+	defaultBranch = main
+
+[alias]
+    drop = restore --
+    dropall = restore -- .
+    unadd = reset HEAD
+    uncmt = reset HEAD^
+    cma = commit --amend
+    br = branch
+    brd = branch -d
+    ck = checkout
+    ckb = checkout -b
+    sw = switch
+    swc = switch -c
+    ri = rebase -i
+	st = status -sb
+	cmm = commit -m
+    ll = log --oneline
+    llg = log --oneline --grep
+	pushom = push origin main
+	pullom = pull origin main
+[core]
+	editor = vim
+	autocrlf = input
+    pager = delta
+[user]
+	name = allendred
+	email = allendred@163.com
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    side-by-side = true
+
+
+    # delta detects terminal colors automatically; set one of these to disable auto-detection
+    # dark = true
+    # light = true
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default

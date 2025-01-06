@@ -1,0 +1,29 @@
+{
+  "title": "Left shift toggle input method",
+  "rules": [
+    {
+      "description": "Tap left shift to ",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_shift"
+          },
+          "to_if_alone": [
+            {
+              "key_code": "spacebar",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "key_code": "left_shift"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
