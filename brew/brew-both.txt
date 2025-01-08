@@ -1,6 +1,4 @@
 asdf
-atuin
-bat
 direnv
 eza
 fastfetch
