@@ -121,10 +121,13 @@ function ToggleMovementByDisplayLines()
     endif
 endfunction
 
-
+set mouse=a
+set mouse=nvi          " 禁用可视模式的鼠标支持
+set mouse=
+set clipboard=unnamedplus
 " ----- Line Numbers -----
-set nu                          " number lines
-set rnu                         " relative line numbering
+set nonu                          " number lines
+set nornu                         " relative line numbering
 nnoremap <C-n> :call ToggleLineNumbers()<CR>          " toggle line numbers of/off 
 function! ToggleLineNumbers()
     if(&relativenumber == 1)
