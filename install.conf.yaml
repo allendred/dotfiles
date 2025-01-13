@@ -31,12 +31,6 @@
       stderr: true
       quiet: false
     -
-      command: ./zsh/install_plugins.sh
-      stdin: true
-      stdout: true
-      stderr: true
-      quiet: false
-    -
       command: ./vim/install_plugins.sh
       stdin: true
       stdout: true

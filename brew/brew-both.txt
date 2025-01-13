@@ -3,7 +3,6 @@ direnv
 eza
 fastfetch
 fd
-fzf
 gcc
 git-delta
 git-lfs
@@ -15,4 +14,3 @@ unzip
 uv
 vim
 yazi
-zoxide 
