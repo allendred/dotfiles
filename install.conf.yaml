@@ -31,6 +31,12 @@
       stderr: true
       quiet: false
     -
+      command: ./install-ohmyzsh.sh
+      stdin: true
+      stdout: true
+      stderr: true
+      quiet: false
+    -
       command: ./vim/install_plugins.sh
       stdin: true
       stdout: true
