@@ -14,3 +14,4 @@ unzip
 uv
 vim
 yazi
+helix

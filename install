@@ -11,6 +11,12 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${BASEDIR}"
 #git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
 #git submodule update --init --recursive "${DOTBOT_DIR}"
+if ! command -v uv &> /dev/null; then
+    echo "uv 未安装，开始安装..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+else
+    echo "uv 已经安装，跳过安装。"
+fi
 uv venv  --python 3.12
 source .venv/bin/activate
 uv pip install                                                   ruamel-yaml
