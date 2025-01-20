@@ -19,5 +19,5 @@ else
 fi
 uv venv  --python 3.12
 source .venv/bin/activate
-uv pip install                                                   ruamel-yaml
+uv pip install                                                   ruamel-yaml ruff ruff-lsp
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"

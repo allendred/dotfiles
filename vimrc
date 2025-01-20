@@ -121,8 +121,8 @@ function ToggleMovementByDisplayLines()
     endif
 endfunction
 
-set mouse=a
-set mouse=nvi          " 禁用可视模式的鼠标支持
+" set mouse=a
+" set mouse=nvi          " 禁用可视模式的鼠标支持
 set mouse=
 set clipboard=unnamedplus
 " ----- Line Numbers -----
