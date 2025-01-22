@@ -9,7 +9,6 @@
     ~/.bashrc:
     ~/.config/karabiner/: ./karabiner
     ~/.config/kitty/: ./kitty
-    ~/.config/nvim/: ./nvim
     ~/.config/yazi/: ./yazi
     ~/.gitconfig:
     ~/.hammerspoon:

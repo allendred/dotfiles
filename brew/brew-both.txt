@@ -11,7 +11,7 @@ lazydocker
 lazygit
 neovim
 unzip
-uv
+
 vim
 yazi
 helix
