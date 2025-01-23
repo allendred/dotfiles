@@ -19,7 +19,7 @@
     ~/.zsh:
     ~/.zshenv: ./zsh/zshenv
     ~/.zshrc: ./zshrc
-
+    ~/.config/nvim: ./nvim
 - shell:
     - touch ~/.hushlogin
     -
