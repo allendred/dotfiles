@@ -12,7 +12,7 @@
   - 📂 搭配 [yazi](https://github.com/sxyazi/yazi) 提供现代化文件管理体验
   - 🌳 使用 [lazygit](https://github.com/jesseduffield/lazygit) 实现优雅的 Git 操作
   - ⚡ 基于 [lazyvim](https://github.com/LazyVim/LazyVim) 的强大 Neovim 配置
-- 🔌 告别 submodules 依赖地狱，zsh/tmux/vim 插件管理简单直观
+- 🔌 告别 submodules 依赖地狱，zsh/vim 插件管理简单直观
 - 🍺 Linux(x86) 采用 [Homebrew](https://brew.sh/)，享受与 macOS 一致的包管理体验
 - 🌐 开箱即用的智能代理配置（完美支持 macOS/WSL/Linux）
 - ⚙️ 现代化终端工具链集成（eza/bat/delta/yazi 等）
