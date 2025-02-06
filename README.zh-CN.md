@@ -7,8 +7,7 @@
 - 🚀 基于 [Dotbot](https://github.com/anishathalye/dotbot) 的一键安装
 - 🖥️ 基于主机名的智能配置管理
 - 🔧 完整的终端开发环境：
-  - 💻 使用 zsh + [Powerlevel10k](https://github.com/romkatv/powerlevel10k) 打造美观高效的 shell
-  - 📝 集成 [atuin](https://github.com/atuinsh/atuin) 实现智能命令历史搜索与同步
+  - 💻 使用 zsh 作为默认 shell
   - 🔄 通过 [direnv](https://github.com/direnv/direnv) 实现自动化环境变量管理
   - 📂 搭配 [yazi](https://github.com/sxyazi/yazi) 提供现代化文件管理体验
   - 🌳 使用 [lazygit](https://github.com/jesseduffield/lazygit) 实现优雅的 Git 操作
@@ -83,17 +82,7 @@ dfu
 
 ### 目录结构
 
-```
-.
-├── brew/           # Homebrew 相关配置
-├── kitty/          # kitty 终端配置
-├── nvim/           # Neovim 配置
-├── tmux/           # Tmux 配置
-├── vim/            # Vim 配置
-├── yazi/           # Yazi 文件管理器配置
-└── zsh/            # Zsh 配置
-    └── hosts/      # 不同主机的特定配置
-```
+
 
 ### 主要功能
 

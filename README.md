@@ -86,19 +86,6 @@ This will overwrite the local repository with the latest state from the remote r
 
 ## Configuration Details
 
-### Directory Structure
-
-```
-.
-├── brew/           # Homebrew related configuration
-├── kitty/          # Kitty terminal configuration
-├── nvim/           # Neovim configuration
-├── tmux/           # Tmux configuration
-├── vim/            # Vim configuration
-├── yazi/           # Yazi file manager configuration
-└── zsh/            # Zsh configuration
-    └── hosts/      # Host-specific configurations
-```
 
 ### Main Features
 
