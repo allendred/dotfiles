@@ -15,7 +15,7 @@ My dotfiles configuration, focused on providing a clean, maintainable, and cross
   - 📂 Modern file management experience with [yazi](https://github.com/sxyazi/yazi)
   - 🌳 Elegant Git operations through [lazygit](https://github.com/jesseduffield/lazygit)
   - ⚡ Powerful Neovim setup based on [lazyvim](https://github.com/LazyVim/LazyVim)
-- 🔌 Say goodbye to submodules dependency hell with simple and intuitive zsh/tmux/vim plugin management
+- 🔌 Say goodbye to submodules dependency hell with simple and intuitive zsh/vim plugin management
 - 🍺 Consistent package management experience with [Homebrew](https://brew.sh/) on Linux(x86) and macOS
 - 🌐 Out-of-the-box smart proxy configuration (perfect support for macOS/WSL/Linux)
 - ⚙️ Modern terminal toolchain integration (eza/bat/delta/yazi and more)
