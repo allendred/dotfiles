@@ -32,52 +32,182 @@ if uname -a | grep -q "Linux" && uname -m | grep -q "aarch64"; then
     exit 0
 fi
 
-# 安装单个包的函数
-install_package() {
-    echo_info "正在安装: $1"
-    if brew install "$1" 2>/dev/null; then
-        echo_success "成功安装: $1"
+# 日志文件
+LOG_DIR="$HOME/.dotfiles/logs"
+LOG_FILE="$LOG_DIR/brew_install_$(date +"%Y%m%d_%H%M%S").log"
+
+# 创建日志目录
+mkdir -p "$LOG_DIR"
+
+# 记录日志的函数
+log() {
+    echo "[$(date +"%Y-%m-%d %H:%M:%S")] $1" >> "$LOG_FILE"
+}
+
+# 检查包是否已安装
+is_package_installed() {
+    if brew list "$1" &>/dev/null; then
+        return 0  # 已安装
     else
-        echo_error "安装失败: $1"
-        return 1
+        return 1  # 未安装
     fi
+}
+
+# 安装单个包的函数，带重试机制
+install_package() {
+    local package=$1
+    local max_retries=3
+    local retry_count=0
+    
+    # 检查是否已安装
+    if is_package_installed "$package"; then
+        echo_info "已安装: $package，跳过"
+        log "已安装: $package，跳过"
+        return 0
+    fi
+    
+    echo_info "正在安装: $package"
+    log "开始安装: $package"
+    
+    while [ $retry_count -lt $max_retries ]; do
+        if brew install "$package" 2>>"$LOG_FILE"; then
+            echo_success "成功安装: $package"
+            log "成功安装: $package"
+            
+            # 验证安装
+            if is_package_installed "$package"; then
+                log "验证安装成功: $package"
+                return 0
+            else
+                echo_error "安装验证失败: $package"
+                log "安装验证失败: $package"
+                return 1
+            fi
+        else
+            retry_count=$((retry_count + 1))
+            if [ $retry_count -lt $max_retries ]; then
+                echo_warning "安装失败: $package，第 $retry_count 次重试..."
+                log "安装失败: $package，第 $retry_count 次重试..."
+                sleep 2  # 等待一段时间再重试
+            else
+                echo_error "安装失败: $package，已达到最大重试次数"
+                log "安装失败: $package，已达到最大重试次数"
+                return 1
+            fi
+        fi
+    done
 }
 
 # 从文件读取并安装包的函数
 install_from_file() {
+    local file_path=$1
+    local parallel=${2:-false}  # 默认为串行安装
+    local packages_to_install=()
+    
+    echo_info "从文件安装: $file_path"
+    log "从文件安装: $file_path"
+    
+    # 读取文件，跳过空行和注释
     while read -r package || [ -n "$package" ]; do
-        # 跳过空行和注释
         case "$package" in
-            ""|\#*) continue ;;
-            *) install_package "$package" || : ;;  # : 是 shell 的空操作符
+            ""|#*) continue ;;
+            *) 
+                # 检查是否已安装
+                if ! is_package_installed "$package"; then
+                    packages_to_install+=("$package")
+                else
+                    echo_info "已安装: $package，跳过"
+                    log "已安装: $package，跳过"
+                fi
+                ;;
         esac
-    done < "$1"
+    done < "$file_path"
+    
+    # 如果没有需要安装的包，直接返回
+    if [ ${#packages_to_install[@]} -eq 0 ]; then
+        echo_info "所有包已安装，无需操作"
+        log "所有包已安装，无需操作"
+        return 0
+    fi
+    
+    # 根据是否并行安装选择不同的安装方式
+    if [ "$parallel" = true ] && [ ${#packages_to_install[@]} -gt 1 ]; then
+        echo_info "并行安装 ${#packages_to_install[@]} 个包..."
+        log "并行安装 ${#packages_to_install[@]} 个包..."
+        
+        # 使用brew的并行安装功能
+        if brew install "${packages_to_install[@]}" 2>>"$LOG_FILE"; then
+            echo_success "成功并行安装所有包"
+            log "成功并行安装所有包"
+            
+            # 验证所有包的安装
+            local all_verified=true
+            for package in "${packages_to_install[@]}"; do
+                if ! is_package_installed "$package"; then
+                    echo_error "安装验证失败: $package"
+                    log "安装验证失败: $package"
+                    all_verified=false
+                fi
+            done
+            
+            if [ "$all_verified" = true ]; then
+                return 0
+            else
+                return 1
+            fi
+        else
+            echo_error "并行安装失败，将尝试串行安装"
+            log "并行安装失败，将尝试串行安装"
+            # 失败后回退到串行安装
+            parallel=false
+        fi
+    fi
+    
+    # 串行安装
+    if [ "$parallel" = false ]; then
+        for package in "${packages_to_install[@]}"; do
+            install_package "$package" || log "安装失败: $package，继续安装其他包"
+        done
+    fi
 }
-
 
 # 主函数
 main() {
     echo_info "开始安装Homebrew应用..."
+    log "开始安装Homebrew应用..."
+    
+    # 检查是否启用并行安装
+    PARALLEL_INSTALL=false
+    if [ "$1" = "--parallel" ]; then
+        PARALLEL_INSTALL=true
+        echo_info "已启用并行安装模式"
+        log "已启用并行安装模式"
+    fi
     
     # 根据系统添加 Homebrew 路径
     if uname -a | grep -q "Darwin"; then
         # macOS
         eval "$(/opt/homebrew/bin/brew shellenv)"
         echo_info "brew 安装 mac apps..."
-        install_from_file ~/.dotfiles/brew/brew-mac.txt
+        log "brew 安装 mac apps..."
+        install_from_file ~/.dotfiles/brew/brew-mac.txt "$PARALLEL_INSTALL"
     else
         # Linux (x86_64)
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         echo_info "brew 安装 linux apps..."
-        install_from_file ~/.dotfiles/brew/brew-linux.txt
+        log "brew 安装 linux apps..."
+        install_from_file ~/.dotfiles/brew/brew-linux.txt "$PARALLEL_INSTALL"
     fi
 
     # 安装通用应用
     echo_info "brew 安装通用 apps..."
-    install_from_file ~/.dotfiles/brew/brew-both.txt
+    log "brew 安装通用 apps..."
+    install_from_file ~/.dotfiles/brew/brew-both.txt "$PARALLEL_INSTALL"
 
     echo_success "Homebrew应用安装完成！"
+    log "Homebrew应用安装完成！"
+    echo_info "安装日志已保存到: $LOG_FILE"
 }
 
-# 执行主函数
-main
+# 执行主函数，传递命令行参数
+main "$@"
