@@ -2,22 +2,163 @@
 
 set -e
 
+# 颜色定义
+GREEN="\033[0;32m"
+BLUE="\033[0;34m"
+YELLOW="\033[0;33m"
+RED="\033[0;31m"
+NC="\033[0m" # No Color
+
+# 配置
 CONFIG="install.conf.yaml"
 DOTBOT_DIR="dotbot"
-
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PYTHON_VERSION="3.12"
 
-cd "${BASEDIR}"
-git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
-git submodule update --init --recursive "${DOTBOT_DIR}"
-if ! command -v uv &> /dev/null; then
-    echo "uv 未安装，开始安装..."
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-else
-    echo "uv 已经安装，跳过安装。"
-fi
-uv venv  --python 3.12
-source .venv/bin/activate
-uv pip install                                                   ruamel-yaml ruff ruff-lsp
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+# 打印带颜色的信息
+echo_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+echo_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+echo_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+echo_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# 检查命令是否存在
+check_command() {
+    if ! command -v $1 &> /dev/null; then
+        return 1
+    fi
+    return 0
+}
+
+# 安装zsh
+install_zsh() {
+    echo_info "正在安装zsh..."
+    if [[ "$(uname)" == "Darwin" ]]; then
+        # macOS系统使用brew安装
+        if check_command brew; then
+            brew install zsh
+        else
+            echo_error "未检测到brew，请先安装Homebrew或手动安装zsh"
+            return 1
+        fi
+    elif [[ "$(uname)" == "Linux" ]]; then
+        # Linux系统根据包管理器安装
+        if check_command apt; then
+            sudo apt update && sudo apt install -y zsh
+        elif check_command dnf; then
+            sudo dnf install -y zsh
+        elif check_command yum; then
+            sudo yum install -y zsh
+        elif check_command pacman; then
+            sudo pacman -S --noconfirm zsh
+        else
+            echo_error "未检测到支持的包管理器，请手动安装zsh"
+            return 1
+        fi
+    else
+        echo_error "不支持的操作系统，请手动安装zsh"
+        return 1
+    fi
+    
+    if [ $? -eq 0 ]; then
+        echo_success "zsh安装成功"
+        return 0
+    else
+        echo_error "zsh安装失败"
+        return 1
+    fi
+}
+
+# 主函数
+main() {
+    echo_info "开始安装dotfiles..."
+    
+    # 切换到基础目录
+    cd "${BASEDIR}"
+    
+    # 检查zsh是否安装
+    if ! check_command zsh; then
+        echo_warning "zsh未安装"
+        read -p "是否安装zsh？(y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            if ! install_zsh; then
+                echo_error "zsh安装失败，请手动安装后重试"
+                exit 1
+            fi
+        else
+            echo_warning "跳过zsh安装，但可能影响部分功能"
+        fi
+    else
+        echo_info "zsh已安装，跳过安装步骤"
+    fi
+    
+    # 更新子模块
+    echo_info "正在同步dotbot子模块..."
+    git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
+    git submodule update --init --recursive "${DOTBOT_DIR}"
+    
+    # 安装uv（Python包管理器）
+    if ! check_command uv; then
+        echo_info "uv未安装，正在安装..."
+        if curl -LsSf https://astral.sh/uv/install.sh | sh; then
+            echo_success "uv安装成功"
+        else
+            echo_error "uv安装失败，请手动安装后重试"
+            exit 1
+        fi
+    else
+        echo_info "uv已安装，跳过安装步骤"
+    fi
+    
+    # 创建并激活虚拟环境
+    echo_info "创建Python ${PYTHON_VERSION}虚拟环境..."
+    if uv venv --python ${PYTHON_VERSION}; then
+        echo_success "虚拟环境创建成功"
+    else
+        echo_error "虚拟环境创建失败"
+        exit 1
+    fi
+    
+    # 激活虚拟环境
+    echo_info "激活虚拟环境..."
+    source .venv/bin/activate
+    
+    # 安装依赖
+    echo_info "安装Python依赖..."
+    uv pip install ruamel-yaml ruff ruff-lsp
+    
+    # 安装oh-my-zsh
+    echo_info "检查oh-my-zsh安装状态..."
+    if [ ! -d "${HOME}/.oh-my-zsh" ]; then
+        echo_info "正在安装oh-my-zsh..."
+        if sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended; then
+            echo_success "oh-my-zsh安装成功"
+        else
+            echo_error "oh-my-zsh安装失败"
+            # 继续安装，不退出，因为oh-my-zsh不是必需的
+        fi
+    else
+        echo_info "oh-my-zsh已安装，跳过安装步骤"
+    fi
+    
+    # 运行dotbot
+    echo_info "运行dotbot安装脚本..."
+    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+    
+    echo_success "dotfiles安装完成！"
+}
+
+# 执行主函数
+main

@@ -1,12 +1,37 @@
 #!/bin/sh
 
+set -e
+
+# 颜色定义
+GREEN="\033[0;32m"
+BLUE="\033[0;34m"
+YELLOW="\033[0;33m"
+RED="\033[0;31m"
+NC="\033[0m" # No Color
+
 # ----- Constants -----
 LINUX_BREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
 MACOS_BREW_PATH="/opt/homebrew/bin/brew"
 BREW_INSTALL_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
+# 打印带颜色的信息
+echo_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+echo_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+echo_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+echo_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
 # 获取系统相关信息
-# Get system information
 get_system_info() {
     OS_TYPE="$(uname)"
     ARCH_TYPE="$(uname -m)"
@@ -23,13 +48,11 @@ get_brew_path() {
 }
 
 # 检查系统兼容性
-# Check system compatibility
 check_system_compatibility() {
     # homebrew 目前不支持 ARM 架构的 Linux
-    # Homebrew on Linux is not supported on ARM processors
     if [ "$OS_TYPE" = "Linux" ] && [ "$ARCH_TYPE" = "aarch64" ]; then
-        echo "⛔ Homebrew on Linux is not supported on ARM processors."
-        echo "https://docs.brew.sh/Homebrew-on-Linux#arm-unsupported"
+        echo_error "Homebrew on Linux is not supported on ARM processors."
+        echo_info "https://docs.brew.sh/Homebrew-on-Linux#arm-unsupported"
         return 1
     fi
     return 0
@@ -46,35 +69,37 @@ check_brew_installation() {
 }
 
 # 安装 Homebrew
-# Install Homebrew
 install_homebrew() {
-    echo "🚀 Homebrew is not installed or not working, installing..."
+    echo_info "Homebrew未安装或无法正常工作，正在安装..."
     if /bin/bash -c "$(curl -fsSL $BREW_INSTALL_URL)"; then
-        echo "🎉 Homebrew is installed successfully"
+        echo_success "Homebrew安装成功"
         return 0
     else
-        echo "❌ Failed to install Homebrew"
+        echo_error "Homebrew安装失败"
         return 1
     fi
 }
 
 # 主函数
-# Main function
 main() {
+    echo_info "检查Homebrew安装状态..."
     get_system_info
     
-    # 如果返回 1（系统不兼容），就会执行 exit 1(直接退出, 不执行后续几行命令)
+    # 检查系统兼容性
     check_system_compatibility || exit 1
     
     BREW_PATH=$(get_brew_path)
     
     if check_brew_installation "$BREW_PATH"; then
-        echo "✅ Homebrew is installed and working"
+        echo_success "Homebrew已安装且正常工作"
     else
-        install_homebrew
+        if install_homebrew; then
+            echo_success "Homebrew安装和配置完成"
+        else
+            echo_error "Homebrew安装失败，请手动安装"
+            exit 1
+        fi
     fi
-    
-    echo
 }
 
 # 执行主函数
