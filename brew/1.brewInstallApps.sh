@@ -28,7 +28,7 @@ echo_error() {
 
 # 检查是否为 ARM Linux
 if uname -a | grep -q "Linux" && uname -m | grep -q "aarch64"; then
-    echo_warning "ARM Linux 暂不支持 Homebrew，退出安装..."
+    echo_warning "ARM Linux 暂不支持 Homebrew退出安装..."
     exit 0
 fi
 
@@ -53,7 +53,7 @@ is_package_installed() {
     fi
 }
 
-# 安装单个包的函数，带重试机制
+# 安装单个包的函数带重试机制
 install_package() {
     local package=$1
     local max_retries=3
@@ -61,8 +61,8 @@ install_package() {
     
     # 检查是否已安装
     if is_package_installed "$package"; then
-        echo_info "已安装: $package，跳过"
-        log "已安装: $package，跳过"
+        echo_info "已安装: $package跳过"
+        log "已安装: $package跳过"
         return 0
     fi
     
@@ -86,12 +86,12 @@ install_package() {
         else
             retry_count=$((retry_count + 1))
             if [ $retry_count -lt $max_retries ]; then
-                echo_warning "安装失败: $package，第 $retry_count 次重试..."
-                log "安装失败: $package，第 $retry_count 次重试..."
+                echo_warning "安装失败: $package 第 $retry_count 次重试..."
+                log "安装失败: $package第 $retry_count 次重试..."
                 sleep 2  # 等待一段时间再重试
             else
-                echo_error "安装失败: $package，已达到最大重试次数"
-                log "安装失败: $package，已达到最大重试次数"
+                echo_error "安装失败: $package已达到最大重试次数"
+                log "安装失败: $package已达到最大重试次数"
                 return 1
             fi
         fi
@@ -107,26 +107,27 @@ install_from_file() {
     echo_info "从文件安装: $file_path"
     log "从文件安装: $file_path"
     
-    # 读取文件，跳过空行和注释
+    # 读取文件跳过空行和注释
     while read -r package || [ -n "$package" ]; do
         case "$package" in
-            ""|#*) continue ;;
+            "") continue ;;
+            \#*) continue ;;
             *) 
                 # 检查是否已安装
                 if ! is_package_installed "$package"; then
                     packages_to_install+=("$package")
                 else
-                    echo_info "已安装: $package，跳过"
-                    log "已安装: $package，跳过"
+                    echo_info "已安装: $package 跳过"
+                    log "已安装: $package 跳过"
                 fi
                 ;;
         esac
     done < "$file_path"
     
-    # 如果没有需要安装的包，直接返回
+    # 如果没有需要安装的包直接返回
     if [ ${#packages_to_install[@]} -eq 0 ]; then
-        echo_info "所有包已安装，无需操作"
-        log "所有包已安装，无需操作"
+        echo_info "所有包已安装无需操作"
+        log "所有包已安装无需操作"
         return 0
     fi
     
@@ -156,8 +157,8 @@ install_from_file() {
                 return 1
             fi
         else
-            echo_error "并行安装失败，将尝试串行安装"
-            log "并行安装失败，将尝试串行安装"
+            echo_error "并行安装失败将尝试串行安装"
+            log "并行安装失败将尝试串行安装"
             # 失败后回退到串行安装
             parallel=false
         fi
@@ -166,7 +167,7 @@ install_from_file() {
     # 串行安装
     if [ "$parallel" = false ]; then
         for package in "${packages_to_install[@]}"; do
-            install_package "$package" || log "安装失败: $package，继续安装其他包"
+            install_package "$package" || log "安装失败: $package 继续安装其他包"
         done
     fi
 }
@@ -209,5 +210,5 @@ main() {
     echo_info "安装日志已保存到: $LOG_FILE"
 }
 
-# 执行主函数，传递命令行参数
+# 执行主函数传递命令行参数
 main "$@"

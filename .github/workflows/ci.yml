@@ -1,0 +1,134 @@
+name: Dotfiles CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Shell Script Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+      
+      - name: Lint shell scripts
+        run: |
+          find . -type f -name "*.sh" -exec shellcheck {} \;
+  
+  test-macos:
+    name: Test on macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Test brew installation script
+        run: |
+          # 创建一个模拟环境，不实际安装软件包
+          mkdir -p /tmp/test-brew
+          
+          # 模拟brew命令
+          cat > /tmp/test-brew/brew << 'EOF'
+          #!/bin/bash
+          echo "[Mock] brew $@"
+          if [ "$1" = "list" ]; then
+            # 始终返回未安装状态
+            exit 1
+          fi
+          exit 0
+          EOF
+          
+          chmod +x /tmp/test-brew/brew
+          export PATH="/tmp/test-brew:$PATH"
+          
+          # 测试brew安装脚本的语法和基本逻辑
+          sh -n ./brew/0.install.sh
+          sh -n ./brew/1.brewInstallApps.sh
+          
+          # 测试安装脚本的mock运行
+          # 使用一个小的测试文件
+          echo "test-package" > /tmp/test-packages.txt
+          
+          # 修改脚本以使用测试文件而不是实际文件
+          SCRIPT="./brew/1.brewInstallApps.sh"
+          TEST_LOG_DIR="/tmp/test-logs"
+          mkdir -p "$TEST_LOG_DIR"
+          
+          # 运行测试，但不实际安装
+          echo "Testing brew install script..."
+          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 \
+          sh -c "LOG_DIR=$TEST_LOG_DIR install_from_file() { echo \"Testing install from: \$1\"; cat \$1; }; . $SCRIPT"
+      
+      - name: Test dotfiles installation script
+        run: |
+          # 测试安装脚本的语法
+          sh -n ./install
+          sh -n ./init_dotfiles.sh
+          
+          # 创建测试目录
+          mkdir -p /tmp/test-dotfiles
+          
+          # 模拟安装，但不实际执行
+          echo "Testing dotfiles installation..."
+          # 这里只检查语法，不实际运行
+  
+  test-ubuntu:
+    name: Test on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Test brew installation script
+        run: |
+          # 创建一个模拟环境，不实际安装软件包
+          mkdir -p /tmp/test-brew
+          
+          # 模拟brew命令
+          cat > /tmp/test-brew/brew << 'EOF'
+          #!/bin/bash
+          echo "[Mock] brew $@"
+          if [ "$1" = "list" ]; then
+            # 始终返回未安装状态
+            exit 1
+          fi
+          exit 0
+          EOF
+          
+          chmod +x /tmp/test-brew/brew
+          export PATH="/tmp/test-brew:$PATH"
+          
+          # 测试brew安装脚本的语法和基本逻辑
+          sh -n ./brew/0.install.sh
+          sh -n ./brew/1.brewInstallApps.sh
+          
+          # 测试安装脚本的mock运行
+          # 使用一个小的测试文件
+          echo "test-package" > /tmp/test-packages.txt
+          
+          # 修改脚本以使用测试文件而不是实际文件
+          SCRIPT="./brew/1.brewInstallApps.sh"
+          TEST_LOG_DIR="/tmp/test-logs"
+          mkdir -p "$TEST_LOG_DIR"
+          
+          # 运行测试，但不实际安装
+          echo "Testing brew install script..."
+          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 \
+          sh -c "LOG_DIR=$TEST_LOG_DIR install_from_file() { echo \"Testing install from: \$1\"; cat \$1; }; . $SCRIPT"
+      
+      - name: Test dotfiles installation script
+        run: |
+          # 测试安装脚本的语法
+          sh -n ./install
+          sh -n ./init_dotfiles.sh
+          
+          # 创建测试目录
+          mkdir -p /tmp/test-dotfiles
+          
+          # 模拟安装，但不实际执行
+          echo "Testing dotfiles installation..."
+          # 这里只检查语法，不实际运行

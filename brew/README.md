@@ -1,3 +1,11 @@
+<!--
+ * @Author: allendred allendred@163.com
+ * @Date: 2025-03-15 22:24:17
+ * @LastEditors: allendred allendred@163.com
+ * @LastEditTime: 2025-03-16 10:12:10
+ * @FilePath: /.dotfiles/brew/README.md
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 # Homebrew 安装脚本
 
 这个目录包含用于安装和管理 Homebrew 包的脚本。
@@ -42,7 +50,6 @@
 - **详细日志**：记录安装过程，方便排查问题
 
 ## 日志文件
-
 安装日志保存在 `~/.dotfiles/logs/` 目录下，格式为 `brew_install_YYYYMMDD_HHMMSS.log`。
 
 ## 自定义包列表

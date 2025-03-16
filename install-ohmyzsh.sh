@@ -5,3 +5,8 @@ if [ ! -d "${ZSH:-$HOME/.dotfiles/oh-my-zsh}" ]; then
 else
     echo "Oh My Zsh is already installed."
 fi
+
+
+
+
+

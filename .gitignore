@@ -11,11 +11,14 @@ karabiner.json
 lazy-lock.json
 lazyvim.json
 
-# tmux plugins
-tmux/plugins
-
 # zsh plugins
 zsh/plugins
 
 # vim plugins
 vim/pack/vendor/start
+
+# logs
+logs/
+*.log
+
+

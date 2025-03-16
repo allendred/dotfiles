@@ -73,7 +73,7 @@ ZSH_THEME="robbyrussell"
 plugins=(git
     zsh-autosuggestions
     zsh-syntax-highlighting
-    powerlevel10k)
+    )
 
 source $ZSH/oh-my-zsh.sh
 # source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
