@@ -1,0 +1,48 @@
+// Zellij配置文件
+
+// 默认布局
+default_layout "default"
+
+// 主题设置
+theme "catppuccin-mocha"
+
+// 按键绑定
+keybinds {
+    normal {
+        // 窗口导航
+        bind "Alt h" { MoveFocus "Left"; }
+        bind "Alt l" { MoveFocus "Right"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt k" { MoveFocus "Up"; }
+        
+        // 创建新窗口
+        bind "Alt n" { NewPane; }
+        bind "Alt w" { ToggleFloatingPanes; }
+        
+        // 调整窗口大小
+        bind "Alt =" { Resize "Increase"; }
+        bind "Alt -" { Resize "Decrease"; }
+    }
+}
+
+// 界面选项
+ui {
+    pane_frames {
+        rounded_corners true
+        hide_session_name false
+    }
+}
+
+// 插件
+plugins {
+    tab_bar { path "tab-bar"; }
+    status_bar { path "status-bar"; }
+    strider { path "strider"; }
+    compact_bar { path "compact-bar"; }
+}
+
+// 会话选项
+session {
+    // 自动退出行为
+    auto_exit true
+}

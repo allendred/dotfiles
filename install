@@ -16,6 +16,9 @@ DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_VERSION="3.12"
 
+# 导入中国镜像源配置
+source "${BASEDIR}/china_mirrors.sh"
+
 # 打印带颜色的信息
 echo_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -137,13 +140,15 @@ main() {
     
     # 安装依赖
     echo_info "安装Python依赖..."
-    uv pip install ruamel-yaml ruff ruff-lsp
+    UV_MIRROR_ARGS=$(get_uv_mirror_args)
+    uv pip install $UV_MIRROR_ARGS ruamel-yaml ruff ruff-lsp
     
     # 安装oh-my-zsh
     echo_info "检查oh-my-zsh安装状态..."
     if [ ! -d "${HOME}/.oh-my-zsh" ]; then
         echo_info "正在安装oh-my-zsh..."
-        if sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended; then
+        OMZ_INSTALL_URL=$(get_omz_install_mirror_url)
+        if sh -c "$(curl -fsSL $OMZ_INSTALL_URL)" "" --unattended; then
             echo_success "oh-my-zsh安装成功"
         else
             echo_error "oh-my-zsh安装失败"

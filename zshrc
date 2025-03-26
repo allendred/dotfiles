@@ -173,3 +173,6 @@ function yy() {
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# 自动启动Zellij
+source ~/.dotfiles/zsh/zellij_autostart.sh

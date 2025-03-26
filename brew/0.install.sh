@@ -12,7 +12,10 @@ NC="\033[0m" # No Color
 # ----- Constants -----
 LINUX_BREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
 MACOS_BREW_PATH="/opt/homebrew/bin/brew"
-BREW_INSTALL_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+
+# 导入中国镜像源配置
+BASEDIR="$(cd "$(dirname "${0}")" && cd .. && pwd)"
+source "${BASEDIR}/china_mirrors.sh"
 
 # 打印带颜色的信息
 echo_info() {
@@ -71,6 +74,8 @@ check_brew_installation() {
 # 安装 Homebrew
 install_homebrew() {
     echo_info "Homebrew未安装或无法正常工作，正在安装..."
+    BREW_INSTALL_URL=$(get_brew_install_mirror_url)
+    echo_info "使用安装源: $BREW_INSTALL_URL"
     if /bin/bash -c "$(curl -fsSL $BREW_INSTALL_URL)"; then
         echo_success "Homebrew安装成功"
         return 0

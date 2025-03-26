@@ -20,6 +20,7 @@
     ~/.zshenv: ./zsh/zshenv
     ~/.zshrc: ./zshrc
     ~/.config/nvim: ./nvim
+    ~/.config/zellij: ./zellij/config
 - shell:
     - touch ~/.hushlogin
     -
@@ -54,6 +55,12 @@
       quiet: false
     -
       command: ./brew/1.brewInstallApps.sh
+      stdin: true
+      stdout: true
+      stderr: true
+      quiet: false
+    -
+      command: ./zellij/install.sh
       stdin: true
       stdout: true
       stderr: true
