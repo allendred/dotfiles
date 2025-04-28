@@ -71,5 +71,10 @@ main() {
   load_host_config "$current_hostname"
 }
 
+# 备份当前机器配置
+backup_machine_config() {
+  "$HOME/.dotfiles/backup_machine_config.sh"
+}
+
 # 执行主逻辑
 main

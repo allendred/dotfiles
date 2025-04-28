@@ -1,9 +1,35 @@
+# macOS专用工具
+
+# 基础工具
 ack
-ffmpegthumbnailer
-imagemagick
-jq
-python-argcomplete
 ripgrep
-unar
+fd
 wget
-zlib 
+curl
+
+# 文件处理
+ffmpegthumbnailer
+ffmpeg
+imagemagick
+unar
+
+# 开发工具
+jq
+yq
+python-argcomplete
+gh
+mas
+
+# 系统工具
+zlib
+coreutils
+findutils
+gnupg
+
+# 监控工具
+htop
+glances
+
+# 网络工具
+nmap
+wireshark

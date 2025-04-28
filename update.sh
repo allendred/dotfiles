@@ -29,6 +29,18 @@ echo_error() {
 # 主函数
 main() {
     echo_info "正在更新dotfiles..."
+    
+    # 在更新前自动备份配置
+    echo_info "正在备份当前配置..."
+    if [ -f "$(dirname "$0")/auto_backup_before_update.sh" ]; then
+        if bash "$(dirname "$0")/auto_backup_before_update.sh"; then
+            echo_success "配置备份成功"
+        else
+            echo_warning "配置备份失败，但将继续更新"
+        fi
+    else
+        echo_warning "备份脚本不存在，跳过备份步骤"
+    fi
 
     # 切换到dotfiles目录
     cd "$(dirname "$0")"
