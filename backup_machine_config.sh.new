@@ -1,0 +1,287 @@
+#!/usr/bin/env bash
+
+set -e
+
+# 颜色定义
+GREEN="\033[0;32m"
+BLUE="\033[0;34m"
+YELLOW="\033[0;33m"
+RED="\033[0;31m"
+NC="\033[0m" # No Color
+
+# 打印带颜色的信息
+echo_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+echo_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+echo_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+echo_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# 获取当前主机名
+get_hostname() {
+    hostname
+}
+
+# 检查主机配置文件是否存在
+check_host_config() {
+    local hostname="$1"
+    local config_file="$HOME/.dotfiles/zsh/hosts/${hostname}.local.zshrc"
+    
+    if [ -f "$config_file" ]; then
+        return 0 # 文件存在
+    else
+        return 1 # 文件不存在
+    fi
+}
+
+# 创建主机配置文件
+create_host_config() {
+    local hostname="$1"
+    local config_file="$HOME/.dotfiles/zsh/hosts/${hostname}.local.zshrc"
+    
+    # 确保目录存在
+    mkdir -p "$HOME/.dotfiles/zsh/hosts"
+    
+    # 创建配置文件
+    touch "$config_file"
+    echo "# 主机特定配置文件: $hostname" > "$config_file"
+    echo "# 创建时间: $(date)" >> "$config_file"
+    echo "" >> "$config_file"
+    
+    echo_success "创建了主机配置文件: $config_file"
+}
+
+# 备份Homebrew安装的软件包
+backup_homebrew() {
+    local hostname="$1"
+    local config_file="$HOME/.dotfiles/zsh/hosts/${hostname}.local.zshrc"
+    
+    echo_info "正在备份Homebrew配置..."
+    
+    # 检查Homebrew是否安装
+    if command -v brew &> /dev/null; then
+        # 检测操作系统类型
+        if [[ "$(uname)" == "Darwin" ]]; then
+            echo "# ----- Homebrew(Mac) -----" >> "$config_file"
+            echo "# 以下是自动生成的Homebrew配置，请勿手动修改" >> "$config_file"
+            echo "export HOMEBREW_PREFIX=\"$(brew --prefix)\"" >> "$config_file"
+            echo "eval \"\$(\$HOMEBREW_PREFIX/bin/brew shellenv)\"" >> "$config_file"
+            echo "" >> "$config_file"
+        elif [[ "$(uname)" == "Linux" ]]; then
+            echo "# ----- Homebrew(Linux) -----" >> "$config_file"
+            echo "# 以下是自动生成的Homebrew配置，请勿手动修改" >> "$config_file"
+            echo "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" >> "$config_file"
+            echo "" >> "$config_file"
+        fi
+        
+        echo_success "Homebrew配置已备份"
+    else
+        echo_warning "未检测到Homebrew，跳过备份"
+    fi
+}
+
+# 备份Node.js环境
+backup_nodejs() {
+    local hostname="$1"
+    local config_file="$HOME/.dotfiles/zsh/hosts/${hostname}.local.zshrc"
+    
+    echo_info "正在备份Node.js环境..."
+    
+    # 检查NVM是否安装
+    if [ -d "$HOME/.nvm" ]; then
+        echo "# ----- Node.js(NVM) -----" >> "$config_file"
+        echo "# 以下是自动生成的NVM配置，请勿手动修改" >> "$config_file"
+        echo "export NVM_DIR=\"$HOME/.nvm\"" >> "$config_file"
+        echo "[ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"  # This loads nvm" >> "$config_file"
+        echo "[ -s \"\$NVM_DIR/bash_completion\" ] && \\. \"\$NVM_DIR/bash_completion\"  # This loads nvm bash_completion" >> "$config_file"
+        echo "" >> "$config_file"
+        
+        echo_success "NVM配置已备份"
+    else
+        echo_warning "未检测到NVM，跳过备份"
+    fi
+}
+
+# 备份Python环境
+backup_python() {
+    local hostname="$1"
+    local config_file="$HOME/.dotfiles/zsh/hosts/${hostname}.local.zshrc"
+    
+    echo_info "正在备份Python环境..."
+    
+    # 检查pyenv是否安装
+    if command -v pyenv &> /dev/null; then
+        echo "# ----- Python(pyenv) -----" >> "$config_file"
+        echo "# 以下是自动生成的pyenv配置，请勿手动修改" >> "$config_file"
+        echo "export PYENV_ROOT=\"$HOME/.pyenv\"" >> "$config_file"
+        echo "command -v pyenv >/dev/null || export PATH=\"\$PYENV_ROOT/bin:\$PATH\"" >> "$config_file"
+        echo "eval \"\$(pyenv init -)\"" >> "$config_file"
+        echo "" >> "$config_file"
+        
+        echo_success "pyenv配置已备份"
+    else
+        echo_warning "未检测到pyenv，跳过备份"
+    fi
+}
+
+# 备份Java环境
+backup_java() {
+    local hostname="$1"
+    local config_file="$HOME/.dotfiles/zsh/hosts/${hostname}.local.zshrc"
+    
+    echo_info "正在备份Java环境..."
+    
+    # 检查JAVA_HOME是否设置
+    if [ -n "$JAVA_HOME" ]; then
+        echo "# ----- Java -----" >> "$config_file"
+        echo "# 以下是自动生成的Java配置，请勿手动修改" >> "$config_file"
+        echo "export JAVA_HOME=\"$JAVA_HOME\"" >> "$config_file"
+        echo "export PATH=\"\$JAVA_HOME/bin:\$PATH\"" >> "$config_file"
+        echo "" >> "$config_file"
+        
+        echo_success "Java配置已备份"
+    else
+        echo_warning "未检测到Java环境变量，跳过备份"
+    fi
+}
+
+# 备份主机特定配置
+backup_host_config() {
+    local hostname=$(get_hostname)
+    
+    echo_info "正在备份主机特定配置..."
+    
+    # 检查主机配置文件是否存在
+    if ! check_host_config "$hostname"; then
+        echo_warning "未找到主机配置文件，将创建新文件"
+        create_host_config "$hostname"
+    fi
+    
+    # 备份各种环境
+    backup_homebrew "$hostname"
+    backup_nodejs "$hostname"
+    backup_python "$hostname"
+    backup_java "$hostname"
+    
+    echo_success "主机特定配置备份完成"
+}
+
+# 备份zsh主机配置文件
+backup_zsh_hosts() {
+    local backup_dir="$1/zsh_hosts"
+    local source_dir="$HOME/.dotfiles/zsh/hosts"
+    
+    echo_info "正在备份zsh主机配置文件..."
+    
+    # 创建备份目录
+    mkdir -p "$backup_dir"
+    
+    # 复制所有主机配置文件
+    if [ -d "$source_dir" ]; then
+        cp -r "$source_dir"/* "$backup_dir"/
+        echo_success "zsh主机配置文件备份完成"
+    else
+        echo_warning "未找到zsh主机配置目录，跳过备份"
+    fi
+}
+
+# 备份zsh模块文件
+backup_zsh_modules() {
+    local backup_dir="$1/zsh_modules"
+    local source_dir="$HOME/.dotfiles/zsh/modules"
+    
+    echo_info "正在备份zsh模块文件..."
+    
+    # 创建备份目录
+    mkdir -p "$backup_dir"
+    
+    # 复制所有模块文件
+    if [ -d "$source_dir" ]; then
+        cp -r "$source_dir"/* "$backup_dir"/
+        echo_success "zsh模块文件备份完成"
+    else
+        echo_warning "未找到zsh模块目录，跳过备份"
+    fi
+}
+
+# 备份重要配置文件
+backup_important_configs() {
+    local backup_dir="$1/configs"
+    
+    echo_info "正在备份重要配置文件..."
+    
+    # 创建备份目录
+    mkdir -p "$backup_dir"
+    
+    # 备份.gitconfig
+    if [ -f "$HOME/.gitconfig" ]; then
+        cp "$HOME/.gitconfig" "$backup_dir/gitconfig"
+        echo_success "已备份: .gitconfig"
+    fi
+    
+    # 备份.vimrc
+    if [ -f "$HOME/.vimrc" ]; then
+        cp "$HOME/.vimrc" "$backup_dir/vimrc"
+        echo_success "已备份: .vimrc"
+    fi
+    
+    # 备份.tmux.conf
+    if [ -f "$HOME/.tmux.conf" ]; then
+        cp "$HOME/.tmux.conf" "$backup_dir/tmux.conf"
+        echo_success "已备份: .tmux.conf"
+    fi
+    
+    # 备份.config目录下的重要配置
+    local config_dirs=("nvim" "kitty" "alacritty" "karabiner" "yazi" "zellij")
+    
+    for dir in "${config_dirs[@]}"; do
+        if [ -d "$HOME/.config/$dir" ]; then
+            mkdir -p "$backup_dir/$dir"
+            cp -r "$HOME/.config/$dir"/* "$backup_dir/$dir"/
+            echo_success "已备份: .config/$dir"
+        fi
+    done
+    
+    echo_success "重要配置文件备份完成"
+}
+
+# 主函数
+main() {
+    echo_info "开始备份dotfiles配置..."
+    
+    # 获取当前时间作为备份目录名
+    local timestamp=$(date +"%Y%m%d_%H%M%S")
+    local backup_dir="$HOME/.dotfiles_backups/$timestamp"
+    
+    # 创建备份目录
+    mkdir -p "$backup_dir"
+    
+    # 备份主机特定配置
+    backup_host_config
+    
+    # 备份zsh主机配置文件
+    backup_zsh_hosts "$backup_dir"
+    
+    # 备份zsh模块文件
+    backup_zsh_modules "$backup_dir"
+    
+    # 备份重要配置文件
+    backup_important_configs "$backup_dir"
+    
+    # 记录最后一次备份路径
+    echo "$backup_dir" > "$HOME/.dotfiles/.last_backup_path"
+    
+    echo_success "dotfiles配置备份完成！备份路径: $backup_dir"
+}
+
+# 执行主函数
+main

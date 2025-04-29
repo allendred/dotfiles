@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+
+# zshrc - 主配置文件
+# 这个文件负责加载所有模块化的配置文件
+
+# 定义模块目录
+ZSH_MODULES_DIR="$HOME/.dotfiles/zsh/modules"
+
+# 加载所有模块
+if [ -d "$ZSH_MODULES_DIR" ]; then
+  # 按照数字前缀顺序加载所有模块
+  for module in "$ZSH_MODULES_DIR"/[0-9][0-9]_*.zsh; do
+    if [ -f "$module" ]; then
+      source "$module"
+    fi
+  done
+fi
+
+# 自动启动Zellij
+if [ -f "$HOME/.dotfiles/zsh/zellij_autostart.sh" ]; then
+  source "$HOME/.dotfiles/zsh/zellij_autostart.sh"
+fi
