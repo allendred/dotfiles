@@ -2,7 +2,7 @@
 
 # 导入中国镜像源配置
 BASEDIR="$(cd "$(dirname "${0}")" && pwd)"
-source "${BASEDIR}/china_mirrors.sh"
+. "${BASEDIR}/china_mirrors.sh"
 
 # 检查是否已经安装 Oh My Zsh
 if [ ! -d "${ZSH:-$HOME/.dotfiles/oh-my-zsh}" ]; then

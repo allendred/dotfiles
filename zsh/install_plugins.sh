@@ -10,7 +10,7 @@
 
 # 导入中国镜像源配置
 BASEDIR="$(cd "$(dirname "${0}")" && cd .. && pwd)"
-source "${BASEDIR}/china_mirrors.sh"
+. "${BASEDIR}/china_mirrors.sh"
 
 # 在 .gitignore 中添加 `zsh/plugins/` 将 zsh 插件全部不 track
 echo "🔄 安装 zsh 插件..."
