@@ -115,8 +115,28 @@ main() {
     # 安装uv（Python包管理器）
     if ! check_command uv; then
         echo_info "uv未安装，正在安装..."
-        if curl -LsSf https://astral.sh/uv/install.sh | sh; then
+        # 使用镜像源或直接源，根据网络情况
+        UV_INSTALL_URL="https://astral.sh/uv/install.sh"
+        if check_need_mirror; then
+            # 如果需要使用镜像，可以使用ghproxy代理
+            UV_INSTALL_URL="${GITHUB_MIRROR}https://astral.sh/uv/install.sh"
+        fi
+        
+        if curl -LsSf $UV_INSTALL_URL | sh; then
             echo_success "uv安装成功"
+            # 添加uv到PATH（通常安装在~/.cargo/bin）
+            export PATH="$HOME/.cargo/bin:$PATH"
+            # 重新检查uv命令
+            if ! check_command uv; then
+                echo_warning "uv安装成功但未找到命令，尝试使用完整路径"
+                UV_PATH="$HOME/.cargo/bin/uv"
+                if [ -f "$UV_PATH" ]; then
+                    alias uv="$UV_PATH"
+                else
+                    echo_error "无法找到uv可执行文件，请检查安装路径"
+                    exit 1
+                fi
+            fi
         else
             echo_error "uv安装失败，请手动安装后重试"
             exit 1
