@@ -172,10 +172,47 @@ install_from_file() {
     fi
 }
 
+# 查找brew可执行文件的函数
+find_brew_executable() {
+    local brew_paths=(
+        "/opt/homebrew/bin/brew"           # macOS ARM
+        "/usr/local/bin/brew"              # macOS Intel
+        "/home/linuxbrew/.linuxbrew/bin/brew" # Linux
+        "$HOME/.linuxbrew/bin/brew"       # Linux (用户安装)
+    )
+    
+    for path in "${brew_paths[@]}"; do
+        if [ -x "$path" ]; then
+            echo "$path"
+            return 0
+        fi
+    done
+    
+    # 尝试在PATH中查找
+    if command -v brew >/dev/null 2>&1; then
+        echo "$(command -v brew)"
+        return 0
+    fi
+    
+    echo ""
+    return 1
+}
+
 # 主函数
 main() {
     echo_info "开始安装Homebrew应用..."
     log "开始安装Homebrew应用..."
+    
+    # 查找brew可执行文件
+    BREW_PATH=$(find_brew_executable)
+    if [ -z "$BREW_PATH" ]; then
+        echo_error "找不到brew可执行文件，请先运行0.install.sh安装Homebrew"
+        log "找不到brew可执行文件，请先运行0.install.sh安装Homebrew"
+        exit 1
+    fi
+    
+    echo_info "使用Homebrew路径: $BREW_PATH"
+    log "使用Homebrew路径: $BREW_PATH"
     
     # 检查是否启用并行安装
     PARALLEL_INSTALL=false
@@ -185,16 +222,24 @@ main() {
         log "已启用并行安装模式"
     fi
     
-    # 根据系统添加 Homebrew 路径
+    # 根据系统设置Homebrew环境
     if uname -a | grep -q "Darwin"; then
         # macOS
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        if [ -f "/opt/homebrew/bin/brew" ]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [ -f "/usr/local/bin/brew" ]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
         echo_info "brew 安装 mac apps..."
         log "brew 安装 mac apps..."
         install_from_file ~/.dotfiles/brew/brew-mac.txt "$PARALLEL_INSTALL"
     else
-        # Linux (x86_64)
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        # Linux
+        if [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        elif [ -f "$HOME/.linuxbrew/bin/brew" ]; then
+            eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
+        fi
         echo_info "brew 安装 linux apps..."
         log "brew 安装 linux apps..."
         install_from_file ~/.dotfiles/brew/brew-linux.txt "$PARALLEL_INSTALL"
