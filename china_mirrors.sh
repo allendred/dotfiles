@@ -3,8 +3,9 @@
 # 此文件包含针对中国网络环境的镜像源配置
 
 # GitHub相关镜像
-GITHUB_MIRROR="https://ghproxy.com/"
-GITHUB_RAW_MIRROR="https://ghproxy.com/https://raw.githubusercontent.com/"
+# 更新于2023年，当前可用的镜像站点
+GITHUB_MIRROR="https://ghfast.top/"
+GITHUB_RAW_MIRROR="https://ghfast.top/https://raw.githubusercontent.com/"
 
 # Homebrew镜像
 BREW_INSTALL_MIRROR="https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh"
