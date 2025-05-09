@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # 导入中国镜像源配置
 BASEDIR="$(cd "$(dirname "${0}")" && cd .. && pwd)"
-source "${BASEDIR}/china_mirrors.sh"
+. "${BASEDIR}/china_mirrors.sh"
 
 # 在 .gitignore 中添加 `vim/pack/vendor/start/` 将 vim 插件全部不 track
 
