@@ -118,32 +118,68 @@ main() {
         # 使用镜像源或直接源，根据网络情况
         UV_INSTALL_URL=$(get_uv_install_mirror_url)
         
-        if curl -LsSf $UV_INSTALL_URL | sh; then
-            echo_success "uv安装成功"
-            # 添加uv到PATH
-            export PATH="$HOME/.cargo/bin:$PATH"
-            # 检查uv是否可用
-            if ! check_command uv; then
-                echo_warning "uv安装成功但未找到命令，尝试使用完整路径"
-                if [ -f "$HOME/.cargo/bin/uv" ]; then
-                    alias uv="$HOME/.cargo/bin/uv"
-                    echo_success "已创建uv别名"
-                else
-                    echo_error "无法找到uv可执行文件，请检查安装路径"
-                    # 尝试查找uv可执行文件
-                    UV_PATH=$(find "$HOME" -name "uv" -type f -executable 2>/dev/null | head -n 1)
-                    if [ -n "$UV_PATH" ]; then
-                        echo_info "找到uv可执行文件: $UV_PATH"
-                        alias uv="$UV_PATH"
+        # 添加重试机制
+        MAX_RETRIES=3
+        RETRY_COUNT=0
+        INSTALL_SUCCESS=false
+        
+        while [ $RETRY_COUNT -lt $MAX_RETRIES ] && [ "$INSTALL_SUCCESS" = "false" ]; do
+            echo_info "尝试下载uv (尝试 $((RETRY_COUNT+1))/$MAX_RETRIES)..."
+            if curl -LsSf --connect-timeout 30 --retry 3 --retry-delay 5 $UV_INSTALL_URL | sh; then
+                echo_success "uv安装成功"
+                INSTALL_SUCCESS=true
+                # 添加uv到PATH
+                export PATH="$HOME/.cargo/bin:$PATH"
+                # 检查uv是否可用
+                if ! check_command uv; then
+                    echo_warning "uv安装成功但未找到命令，尝试使用完整路径"
+                    if [ -f "$HOME/.cargo/bin/uv" ]; then
+                        alias uv="$HOME/.cargo/bin/uv"
                         echo_success "已创建uv别名"
                     else
-                        exit 1
+                        echo_error "无法找到uv可执行文件，请检查安装路径"
+                        # 尝试查找uv可执行文件
+                        UV_PATH=$(find "$HOME" -name "uv" -type f -executable 2>/dev/null | head -n 1)
+                        if [ -n "$UV_PATH" ]; then
+                            echo_info "找到uv可执行文件: $UV_PATH"
+                            alias uv="$UV_PATH"
+                            echo_success "已创建uv别名"
+                        else
+                            INSTALL_SUCCESS=false
+                        fi
                     fi
                 fi
+            else
+                RETRY_COUNT=$((RETRY_COUNT+1))
+                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                    echo_warning "下载失败，将在5秒后重试..."
+                    sleep 5
+                fi
             fi
-        else
-            echo_error "uv安装失败，请手动安装后重试"
-            exit 1
+        done
+        
+        if [ "$INSTALL_SUCCESS" = "false" ]; then
+            echo_error "uv安装失败，尝试备用下载方法..."
+            # 尝试使用wget作为备用
+            if command -v wget &> /dev/null; then
+                echo_info "尝试使用wget下载..."
+                if wget -O- $UV_INSTALL_URL | sh; then
+                    echo_success "使用wget安装uv成功"
+                    export PATH="$HOME/.cargo/bin:$PATH"
+                    INSTALL_SUCCESS=true
+                else
+                    echo_error "使用wget安装uv失败"
+                fi
+            fi
+            
+            # 如果仍然失败，提示手动安装
+            if [ "$INSTALL_SUCCESS" = "false" ]; then
+                echo_error "uv安装失败，请手动安装后重试"
+                echo_info "您可以尝试手动运行以下命令安装uv:"
+                echo "curl -LsSf $UV_INSTALL_URL | sh"
+                echo "或者访问 https://github.com/astral-sh/uv 获取更多安装方法"
+                exit 1
+            fi
         fi
     else
         echo_info "uv已安装，跳过安装步骤"

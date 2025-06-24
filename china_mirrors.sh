@@ -14,7 +14,14 @@ BREW_INSTALL_MIRROR="https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh"
 OMZ_INSTALL_MIRROR="https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh"
 
 # uv安装脚本镜像
+# 主镜像
 UV_INSTALL_MIRROR="https://mirror.ghproxy.com/https://astral.sh/uv/install.sh"
+# 备用镜像列表
+UV_INSTALL_MIRROR_BACKUPS=(
+    "https://ghproxy.com/https://astral.sh/uv/install.sh"
+    "https://gh.api.99988866.xyz/https://astral.sh/uv/install.sh"
+    "https://hub.fastgit.xyz/astral-sh/uv/releases/download/latest/uv-installer.sh"
+)
 
 # Python相关镜像
 PYPI_MIRROR="https://pypi.tuna.tsinghua.edu.cn/simple"
@@ -150,9 +157,23 @@ get_uv_mirror_args() {
 # 获取uv安装脚本镜像URL
 get_uv_install_mirror_url() {
     if check_need_mirror; then
+        # 返回主镜像
         echo "$UV_INSTALL_MIRROR"
     else
         echo "https://astral.sh/uv/install.sh"
+    fi
+}
+
+# 获取uv安装脚本备用镜像URL
+get_uv_install_backup_mirrors() {
+    if check_need_mirror; then
+        # 返回备用镜像列表
+        for mirror in "${UV_INSTALL_MIRROR_BACKUPS[@]}"; do
+            echo "$mirror"
+        done
+    else
+        # 如果不需要镜像，返回空
+        echo ""
     fi
 }
 
