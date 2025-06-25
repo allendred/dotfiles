@@ -47,8 +47,8 @@ jobs:
           export PATH="/tmp/test-brew:$PATH"
           
           # 测试brew安装脚本的语法和基本逻辑
-          sh -n ./brew/0.install.sh
-          sh -n ./brew/1.brewInstallApps.sh
+          bash -n ./brew/0.install.sh
+          bash -n ./brew/1.brewInstallApps.sh
           
           # 测试安装脚本的mock运行
           # 使用一个小的测试文件
@@ -103,8 +103,8 @@ jobs:
           export PATH="/tmp/test-brew:$PATH"
           
           # 测试brew安装脚本的语法和基本逻辑
-          sh -n ./brew/0.install.sh
-          sh -n ./brew/1.brewInstallApps.sh
+          bash -n ./brew/0.install.sh
+          bash -n ./brew/1.brewInstallApps.sh
           
           # 测试安装脚本的mock运行
           # 使用一个小的测试文件
