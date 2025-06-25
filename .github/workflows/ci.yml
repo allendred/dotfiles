@@ -62,7 +62,7 @@ jobs:
           # 运行测试，但不实际安装
           echo "Testing brew install script..."
           HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 \
-          sh -c "LOG_DIR=$TEST_LOG_DIR install_from_file() { echo \"Testing install from: \$1\"; cat \$1; }; . $SCRIPT"
+          bash -c "LOG_DIR=$TEST_LOG_DIR install_from_file() { echo \"Testing install from: \$1\"; cat \$1; }; . $SCRIPT"
       
       - name: Test dotfiles installation script
         run: |
@@ -118,7 +118,7 @@ jobs:
           # 运行测试，但不实际安装
           echo "Testing brew install script..."
           HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 \
-          sh -c "LOG_DIR=$TEST_LOG_DIR install_from_file() { echo \"Testing install from: \$1\"; cat \$1; }; . $SCRIPT"
+          bash -c "LOG_DIR=$TEST_LOG_DIR install_from_file() { echo \"Testing install from: \$1\"; cat \$1; }; . $SCRIPT"
       
       - name: Test dotfiles installation script
         run: |
