@@ -129,7 +129,7 @@ main() {
                 echo_success "uv安装成功"
                 INSTALL_SUCCESS=true
                 # 添加uv到PATH
-                export PATH="$HOME/.cargo/bin:$PATH"
+                export PATH="$HOME/.local/bin:$PATH"
                 # 检查uv是否可用
                 if ! check_command uv; then
                     echo_warning "uv安装成功但未找到命令，尝试使用完整路径"
