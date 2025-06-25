@@ -5,13 +5,13 @@
 # GitHub相关镜像
 # 更新于2023年，当前可用的镜像站点
 GITHUB_MIRROR="https://ghfast.top/"
-GITHUB_RAW_MIRROR="https://ghfast.top/https://raw.githubusercontent.com/"
+GITHUB_RAW_MIRROR="https://ghfast.top/"
 
 # Homebrew镜像
 BREW_INSTALL_MIRROR="https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh"
 
 # Oh-My-Zsh镜像
-OMZ_INSTALL_MIRROR="https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh"
+OMZ_INSTALL_MIRROR="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 
 # uv安装脚本镜像
 # 主镜像
@@ -89,7 +89,7 @@ get_github_mirror_url() {
     if check_need_mirror; then
         # 如果原始URL已经包含github.com，则替换为镜像URL
         if echo "$original_url" | grep -q "github.com"; then
-            echo "${GITHUB_MIRROR}${original_url}"
+            echo "${GITHUB_MIRROR}${original_url#https://github.com/}"
         else
             echo "$original_url"
         fi
@@ -105,11 +105,10 @@ get_github_raw_mirror_url() {
     if check_need_mirror; then
         # 替换raw.githubusercontent.com的URL
         if echo "$original_url" | grep -q "raw.githubusercontent.com"; then
-            local new_url=$(echo "$original_url" | sed 's|https://raw.githubusercontent.com/|'"${GITHUB_RAW_MIRROR}"'|')
-            echo "$new_url"
+            echo "${GITHUB_RAW_MIRROR}${original_url#https://raw.githubusercontent.com/}"
         # 替换直接指向GitHub raw内容的URL
         elif echo "$original_url" | grep -q "github.com.*master/\|github.com.*main/"; then
-            echo "${GITHUB_RAW_MIRROR}${original_url#*https://raw.githubusercontent.com/}"
+            echo "${GITHUB_RAW_MIRROR}${original_url#https://github.com/}"
         else
             echo "$original_url"
         fi
