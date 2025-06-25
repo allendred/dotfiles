@@ -4,8 +4,8 @@
 
 # GitHub相关镜像
 # 更新于2023年，当前可用的镜像站点
-GITHUB_MIRROR="https://ghfast.top/"
-GITHUB_RAW_MIRROR="https://ghfast.top/"
+GITHUB_MIRROR="https://mirror.ghproxy.com/"
+GITHUB_RAW_MIRROR="https://mirror.ghproxy.com/"
 
 # Homebrew镜像
 BREW_INSTALL_MIRROR="https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh"
