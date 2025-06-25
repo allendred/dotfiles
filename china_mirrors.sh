@@ -15,7 +15,7 @@ OMZ_INSTALL_MIRROR="https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install
 
 # uv安装脚本镜像
 # 主镜像
-UV_INSTALL_MIRROR="https://mirror.ghproxy.com/https://astral.sh/uv/install.sh"
+UV_INSTALL_MIRROR="https://astral.sh/uv/install.sh"
 # 备用镜像列表
 UV_INSTALL_MIRROR_BACKUPS=(
     "https://ghproxy.com/https://astral.sh/uv/install.sh"
