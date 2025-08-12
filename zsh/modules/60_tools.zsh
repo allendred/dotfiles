@@ -3,6 +3,10 @@
 # 60_tools.zsh - 工具配置
 # 包含各种开发工具的配置
 
+# Custom Paths
+export PATH="$HOME/python/bin:$PATH"
+
+
 # asdf 版本管理器
 if [ -f "$(brew --prefix asdf)/libexec/asdf.sh" ]; then
   source "$(brew --prefix asdf)/libexec/asdf.sh"
