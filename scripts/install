@@ -87,8 +87,8 @@ install_zsh() {
 main() {
     echo_info "开始安装dotfiles..."
     
-    # 切换到基础目录
-    cd "${BASEDIR}"
+    # 切换到项目根目录
+    cd "${BASEDIR}/.."
     
     # 检查zsh是否安装
     if ! check_command zsh; then
@@ -220,7 +220,7 @@ main() {
     
     # 运行dotbot
     echo_info "运行dotbot安装脚本..."
-    "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+    "./${DOTBOT_DIR}/${DOTBOT_BIN}" -d "./" -c "${CONFIG}" "${@}"
     
     echo_success "dotfiles安装完成！"
 }

@@ -24,7 +24,7 @@ git clone https://github.com/allendred/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
 # Run the installation script
-./install
+./scripts/install
 ```
 
 ### Main Configuration Files
@@ -106,7 +106,7 @@ git clone https://github.com/allendred/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
 # 运行安装脚本
-./install
+./scripts/install
 ```
 
 ### 主要配置文件
