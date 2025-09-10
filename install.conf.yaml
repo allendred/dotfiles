@@ -6,68 +6,63 @@
 - clean: ["~"]
 
 - link:
-    ~/.bashrc:
-    ~/.config/karabiner/: ./karabiner
-    ~/.config/kitty/: ./kitty
-    ~/.config/yazi/: ./yazi
-    ~/.gitconfig:
-    ~/.hammerspoon:
-    ~/.profile:
-    ~/.p10k.zsh:
-    ~/.vim:
-    ~/.vimrc:
-    ~/.zsh:
-    ~/.zshenv: ./zsh/zshenv
-    ~/.zshrc: ./zshrc
-    ~/.config/nvim: ./nvim
-    ~/.config/zellij: ./zellij/config
+    ~/.bashrc: config/bash/bashrc
+    ~/.config/karabiner: config/karabiner
+    ~/.config/kitty: config/kitty
+    ~/.config/yazi: config/yazi
+    ~/.gitconfig: config/git/gitconfig
+    ~/.hammerspoon: config/hammerspoon
+    ~/.profile: config/bash/profile
+    ~/.p10k.zsh: config/zsh/p10k.zsh
+    ~/.vim: config/vim
+    ~/.vimrc: config/vim/vimrc
+    ~/.zsh: config/zsh
+    ~/.zshenv: config/zsh/zshenv
+    ~/.zshrc: config/zsh/zshrc
+    ~/.config/nvim: config/nvim
+    ~/.config/zellij: config/zellij/config
+
 - shell:
     - touch ~/.hushlogin
-    -
-      command: ./zsh/activate_zsh.sh
+    - command: scripts/china_mirrors.sh
       stdin: true
       stdout: true
       stderr: true
       quiet: false
-    -
-      command: ./install-ohmyzsh.sh
+    - command: config/zsh/activate_zsh.sh
       stdin: true
       stdout: true
       stderr: true
       quiet: false
-    -
-      command: ./zsh/install_plugins.sh
+    - command: scripts/install-ohmyzsh.sh
       stdin: true
       stdout: true
       stderr: true
       quiet: false
-    -
-      command: ./vim/install_plugins.sh
+    - command: config/zsh/install_plugins.sh
       stdin: true
       stdout: true
       stderr: true
       quiet: false
-    -
-      command: ./brew/0.install.sh
+    - command: config/vim/install_plugins.sh
       stdin: true
       stdout: true
       stderr: true
       quiet: false
-    -
-      command: ./brew/1.brewInstallApps.sh
+    - command: config/brew/0.install.sh
       stdin: true
       stdout: true
       stderr: true
       quiet: false
-    -
-      command: ./zellij/install.sh
+    - command: config/brew/1.brewInstallApps.sh
+      stdin: true
+      stdout: true
+      stderr: true
+      quiet: false
+    - command: config/zellij/install.sh
       stdin: true
       stdout: true
       stderr: true
       quiet: false
     - git submodule sync --recursive
     - git submodule update --init --recursive
-    - >
-      git clean -fdx
-      vim/pack/vendor/start/
-  # the following have to run after linking ~/.gitconfig

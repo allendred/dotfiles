@@ -4,7 +4,7 @@
 # This file is responsible for loading all modular configuration files.
 
 # Define the directory for modules
-ZSH_MODULES_DIR="$HOME/.dotfiles/zsh/modules"
+ZSH_MODULES_DIR="$HOME/.dotfiles/config/zsh/modules"
 
 # Load all modules
 if [ -d "$ZSH_MODULES_DIR" ]; then
