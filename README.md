@@ -72,6 +72,14 @@ cd ~/.dotfiles
 ./update.sh
 ```
 
+### Structure Optimization & Best Practices
+
+This repository incorporates several best practices to enhance security, robustness, and maintainability.
+
+- **Modular `zsh` Configuration**: The main `~/.zshrc` acts as a simple loader for modules located in `zsh/modules/`. This keeps the configuration clean and easy to manage.
+- **Secrets Management**: A mechanism for managing sensitive information (like API keys and tokens) is in place. Local secrets should be stored in the `~/.local_secrets` file, which is automatically loaded on shell startup but is ignored by Git. You can start by copying the provided `.local_secrets.example` file.
+- **Script Linting**: All key shell scripts have been analyzed and improved using `shellcheck` to prevent common errors and enhance reliability.
+
 ---
 
 <a id="中文"></a>
@@ -143,3 +151,11 @@ cd ~/.dotfiles
 cd ~/.dotfiles
 ./update.sh
 ```
+
+### 结构优化与最佳实践
+
+为了提高安全性、健壮性和可维护性，本仓库集成了一些最佳实践。
+
+- **模块化的 `zsh` 配置**: 主配置 `~/.zshrc` 仅作为加载器，负责加载 `zsh/modules/` 目录下的各个模块。这让配置更清晰、易于管理。
+- **敏感信息管理**: 项目建立了一套敏感信息（如API密钥、Token等）的管理机制。私密信息应存放在 `~/.local_secrets` 文件中，该文件会在启动时自动加载，但会被Git忽略以确保安全。您可以从复制 `.local_secrets.example` 文件开始使用。
+- **脚本健壮性**: 所有核心Shell脚本都经过了 `shellcheck` 工具的分析和修复，以避免常见错误，提高脚本的可靠性。

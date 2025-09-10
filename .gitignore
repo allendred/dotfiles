@@ -21,4 +21,7 @@ vim/pack/vendor/start
 logs/
 *.log
 
+# Local secrets file
+.local_secrets
+
 

@@ -1,20 +1,28 @@
-#!/usr/bin/env zsh
+# Core Zsh settings and Oh My Zsh configuration
 
-# 00_core.zsh - 核心设置
-# 包含基本的环境变量、路径等核心配置
+# Path to your Oh My Zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
 
-# 设置系统语言环境为美式英语, 字符编码为 UTF-8
+# Set name of the theme to load
+ZSH_THEME="robbyrussell"
+
+# Which plugins would you like to load?
+plugins=(git
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    )
+
+source $ZSH/oh-my-zsh.sh
+
+# Set terminal type
+export TERM=xterm-256color
+
+# Set default editor
+export EDITOR='nvim'
+
+# Set locale
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-# 设置终端颜色(修复远程登录主机时 kcbt 异常导致的命令预测字符无法清除的问题)
-export TERM=xterm-256color
-
-# 设置默认编辑器
-export EDITOR='nvim'
-
-# 添加用户bin目录到PATH
-export PATH="$HOME/.local/bin:$PATH"
-
-# vim风格的命令行编辑模式
+# vim style keybindings
 set -o vi

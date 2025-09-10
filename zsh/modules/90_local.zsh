@@ -1,15 +1,11 @@
-#!/usr/bin/env zsh
+# Load host-specific and other local configurations
 
-# 90_local.zsh - 本地配置加载器
-# 加载主机特定的配置文件
-
-# 加载主机特定配置
+# Load host-specific config
 if [ -f "$HOME/.zsh/hosts/local_index.sh" ]; then
   source "$HOME/.zsh/hosts/local_index.sh"
-  
-  # 获取当前主机名
-  local hostname=$(hostname)
-  
-  # 加载主机特定配置
-  load_host_config "$hostname"
+fi
+
+# Autostart Zellij
+if [ -f "$HOME/.dotfiles/zsh/zellij_autostart.sh" ]; then
+  source "$HOME/.dotfiles/zsh/zellij_autostart.sh"
 fi
