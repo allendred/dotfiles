@@ -232,7 +232,7 @@ main() {
         fi
         echo_info "brew 安装 mac apps..."
         log "brew 安装 mac apps..."
-        install_from_file ~/.dotfiles/brew/brew-mac.txt "$PARALLEL_INSTALL"
+        install_from_file ~/.dotfiles/config/brew/brew-mac.txt "$PARALLEL_INSTALL"
     else
         # Linux
         if [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
@@ -242,13 +242,13 @@ main() {
         fi
         echo_info "brew 安装 linux apps..."
         log "brew 安装 linux apps..."
-        install_from_file ~/.dotfiles/brew/brew-linux.txt "$PARALLEL_INSTALL"
+        install_from_file ~/.dotfiles/config/brew/brew-linux.txt "$PARALLEL_INSTALL"
     fi
 
     # 安装通用应用
     echo_info "brew 安装通用 apps..."
     log "brew 安装通用 apps..."
-    install_from_file ~/.dotfiles/brew/brew-both.txt "$PARALLEL_INSTALL"
+    install_from_file ~/.dotfiles/config/brew/brew-both.txt "$PARALLEL_INSTALL"
 
     echo_success "Homebrew应用安装完成！"
     log "Homebrew应用安装完成！"

@@ -1,0 +1,9 @@
+[2025-09-10 15:23:38] 开始安装Homebrew应用...
+[2025-09-10 15:23:38] 使用Homebrew路径: /opt/homebrew/bin/brew
+[2025-09-10 15:23:38] brew 安装 mac apps...
+[2025-09-10 15:23:38] 从文件安装: /Users/allendred/.dotfiles/brew/brew-mac.txt
+[2025-09-10 15:23:38] 所有包已安装无需操作
+[2025-09-10 15:23:38] brew 安装通用 apps...
+[2025-09-10 15:23:38] 从文件安装: /Users/allendred/.dotfiles/brew/brew-both.txt
+[2025-09-10 15:23:38] 所有包已安装无需操作
+[2025-09-10 15:23:38] Homebrew应用安装完成！

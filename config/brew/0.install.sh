@@ -14,8 +14,8 @@ LINUX_BREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
 MACOS_BREW_PATH="/opt/homebrew/bin/brew"
 
 # 导入中国镜像源配置
-BASEDIR="$(cd "$(dirname "${0}")" && cd .. && pwd)"
-. "${BASEDIR}/china_mirrors.sh"
+BASEDIR="$(cd "$(dirname "${0}")/../.." && pwd)"
+. "${BASEDIR}/scripts/china_mirrors.sh"
 
 # 打印带颜色的信息
 echo_info() {
