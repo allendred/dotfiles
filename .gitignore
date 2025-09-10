@@ -17,9 +17,7 @@ zsh/plugins
 # vim plugins
 vim/pack/vendor/start
 
-# logs
-logs/
-*.log
+
 
 # Local secrets file
 .local_secrets
