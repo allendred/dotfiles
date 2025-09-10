@@ -5,3 +5,9 @@
 [submodule "vim/pack/vendor/start/nerdtree"]
 	path = vim/pack/vendor/start/nerdtree
 	url = https://github.com/preservim/nerdtree.git
+[submodule "config/vim/pack/vendor/start/nerdtree"]
+	path = config/vim/pack/vendor/start/nerdtree
+	url = https://github.com/preservim/nerdtree
+[submodule "config/vim/pack/vendor/start/vim-oscyank"]
+	path = config/vim/pack/vendor/start/vim-oscyank
+	url = https://github.com/ojroques/vim-oscyank

@@ -44,11 +44,7 @@
       stdout: true
       stderr: true
       quiet: false
-    - command: config/vim/install_plugins.sh
-      stdin: true
-      stdout: true
-      stderr: true
-      quiet: false
+    
     - command: config/brew/0.install.sh
       stdin: true
       stdout: true
