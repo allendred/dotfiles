@@ -40,7 +40,7 @@ plugins {
     strider { path "strider"; }
     compact_bar { path "compact-bar"; }
 }
-
+support_kitty_keyboard_protocol false
 // 会话选项
 session {
     // 自动退出行为

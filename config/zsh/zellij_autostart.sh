@@ -15,7 +15,8 @@ SESSION_TO_ATTACH=$(zellij list-sessions | head -n 1 | sed 's/ .*//')
 
 # 3. 判断并执行
 if [[ -n "$SESSION_TO_ATTACH" ]]; then
-    zellij attach "$SESSION_TO_ATTACH"
+    zellij attach 
+    #"$SESSION_TO_ATTACH"
     # 检查附加是否成功。如果失败（例如，会话已死），则继续创建新会话
     if [ $? -ne 0 ]; then
         zellij
